@@ -3,7 +3,10 @@ languageCode = "en-us"
 title = "My New Hugo Site"
 
 theme = "shalom-olam-hugo-theme"
+summaryLength = 35
 sectionPagesMenu = "main"
+
+paginate = 3
 
 [params]
     github = "#"
