@@ -7,4 +7,5 @@ RUN npm add gulp -g \
     && npm install
 
 COPY semantic.json .
+COPY theme.config ./src/
 CMD gulp build
