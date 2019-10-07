@@ -1,15 +1,12 @@
 baseURL = "http://example.org/"
-languageCode = "en-us"
-title = "My New Hugo Site"
+languageCode = "he-il"
+title = "שלום עולם"
 
 theme = "shalom-olam-hugo-theme"
-summaryLength = 35
+summaryLength = 20
 sectionPagesMenu = "main"
 
 paginate = 3
-
-[params]
-    github = "#"
 
 [taxonomies]
     category = "categories"
