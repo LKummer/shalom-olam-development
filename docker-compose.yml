@@ -9,4 +9,5 @@ services:
       - ./blog/themes/shalom-olam-hugo-theme/static/css/semantic.rtl.min.css:/fomantic/dist/semantic.rtl.min.css
       - ./blog/themes/shalom-olam-hugo-theme/static/js/semantic.min.js:/fomantic/dist/semantic.min.js
       - ./blog/themes/shalom-olam-hugo-theme/static/css/themes:/fomantic/dist/themes
+      - ./style/semantic.json:/fomantic/semantic.json
       - ./style/site:/fomantic/site
