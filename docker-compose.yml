@@ -11,3 +11,10 @@ services:
       - ./blog/themes/shalom-olam-hugo-theme/static/css/themes:/fomantic/dist/themes
       - ./external/fomantic/semantic.json:/fomantic/semantic.json
       - ./external/fomantic/site:/fomantic/site
+  
+  package_dev:
+    build: package
+    command: npm run-script build
+    volumes:
+      - /package/node_modules
+      - ./package:/package-
