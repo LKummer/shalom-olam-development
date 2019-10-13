@@ -3,21 +3,14 @@ const webpack = require('webpack');
 
 module.exports = {
     mode: "development",
-    entry: './source/index.ts',
+    entry: './source/index.js',
     output: {
         filename: 'main.js',
         path: path.resolve(__dirname, 'distribution'),
     },
-    resolve: {
-        extensions: [".ts", ".tsx", ".js"],
-        modules: [
-            '/package/node_modules',
-            '/package/external'
-        ]
-    },
     module: {
         rules: [
-            { test: /\.tsx?$/, loader: "ts-loader" }
+            { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
         ]
     }
 };

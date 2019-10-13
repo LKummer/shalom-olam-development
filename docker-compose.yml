@@ -20,3 +20,4 @@ services:
       - /package/external
       - ./package:/package
       - ./external/fomantic/distribution:/package/external
+      - ./blog/themes/shalom-olam-hugo-theme/static/js/main.js:/package/distribution/main.js
