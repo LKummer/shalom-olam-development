@@ -6,9 +6,9 @@ services:
     command: gulp build
     volumes:
       - /fomantic/node_modules
-      - ./blog/themes/shalom-olam-hugo-theme/static/css/semantic.rtl.min.css:/fomantic/dist/semantic.rtl.min.css
-      - ./blog/themes/shalom-olam-hugo-theme/static/js/semantic.min.js:/fomantic/dist/semantic.min.js
-      - ./blog/themes/shalom-olam-hugo-theme/static/css/themes:/fomantic/dist/themes
+      - ./external/fomantic/distribution/semantic.rtl.min.css:/fomantic/dist/semantic.rtl.min.css
+      - ./external/fomantic/distribution/semantic.min.js:/fomantic/dist/semantic.min.js
+      - ./external/fomantic/distribution/themes:/fomantic/dist/themes
       - ./external/fomantic/semantic.json:/fomantic/semantic.json
       - ./external/fomantic/site:/fomantic/site
   
@@ -17,4 +17,6 @@ services:
     command: npm run-script build
     volumes:
       - /package/node_modules
-      - ./package:/package-
+      - /package/external
+      - ./package:/package
+      - ./external/fomantic/distribution:/package/external

@@ -1,5 +1,5 @@
 # Generated resource folder.
 _gen/
 
-# Package build folder.
-package/distribution/
+# Build folders.
+distribution/
