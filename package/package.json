@@ -17,6 +17,7 @@
     "webpack-cli": "^3.3.9"
   },
   "dependencies": {
+    "@types/jquery": "^3.3.31",
     "fuse.js": "^3.4.5",
     "jquery": "^3.4.1",
     "prismjs": "^1.17.1"

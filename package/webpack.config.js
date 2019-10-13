@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
     mode: "development",
@@ -8,7 +9,11 @@ module.exports = {
         path: path.resolve(__dirname, 'distribution'),
     },
     resolve: {
-        extensions: [".ts", ".tsx", ".js"]
+        extensions: [".ts", ".tsx", ".js"],
+        modules: [
+            '/package/node_modules',
+            '/package/external'
+        ]
     },
     module: {
         rules: [
