@@ -14,6 +14,16 @@ services:
   
   package_dev:
     build: package
+    command: npm run-script watch
+    volumes:
+      - /package/node_modules
+      - /package/external
+      - ./package:/package
+      - ./external/fomantic/distribution:/package/external
+      - ./blog/themes/shalom-olam-hugo-theme/static/js/main.js:/package/distribution/main.js
+  
+  package_build:
+    build: package
     command: npm run-script build
     volumes:
       - /package/node_modules

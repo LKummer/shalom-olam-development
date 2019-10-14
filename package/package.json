@@ -3,13 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "private": true,
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack"
+    "build": "webpack",
+    "watch": "webpack --mode development --watch"
   },
   "author": "Lior Kummer",
-  "license": "GPL-3.0",
   "devDependencies": {
     "@babel/core": "^7.6.4",
     "@babel/plugin-transform-runtime": "^7.6.2",
