@@ -97,7 +97,7 @@ $('.ui.search').search({
                 callback({results: results, success: true});
             }
             else {
-                return {success: false};
+                callback({success: false});
             }
         }},
     error: {
