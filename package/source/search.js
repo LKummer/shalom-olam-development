@@ -3,8 +3,8 @@ function string_insert(string, substring, position) {
     return `${string.slice(0, position)}${substring}${string.slice(position)}`;
 };
 
-const highlight_start = '<mark>'
-const highlight_end = '</mark>'
+const highlight_start = '<mark>';
+const highlight_end = '</mark>';
 function highlight_string(string, matches) {
     let extra_length = 0;
     matches.forEach(indices => {
@@ -88,7 +88,7 @@ var fuse;
 async function get_fuse() {
     if (fuse === undefined) {
         try {
-            const result = await search_json_promise('/חיפוש/index.json')
+            const result = await search_json_promise('/חיפוש/index.json');
             fuse = new Fuse(result, fuse_options);
         } catch(status) {
             return({success: false});
@@ -109,21 +109,23 @@ function search_promise(term) {
 };
 
 // Menu Search
-$('.ui.search').search({ 
-    apiSettings: {
-        responseAsync: (settings, callback) => {
-            search_promise(settings.urlData.query).then((results) => {
-                callback({results: results, success: true});
-            }, () => {
-                callback({success: false});
-            });
-        }},
-    error: {
-        noResults: 'אולי תנסו משהו אחר?'
-    },
-    selectFirstResult: true,
-    searchDelay: 0
-});
+function initialize_search_menu() {
+    $('.ui.search').search({ 
+        apiSettings: {
+            responseAsync: (settings, callback) => {
+                search_promise(settings.urlData.query).then((results) => {
+                    callback({results: results, success: true});
+                }, () => {
+                    callback({success: false});
+                });
+            }},
+        error: {
+            noResults: 'אולי תנסו משהו אחר?'
+        },
+        selectFirstResult: true,
+        searchDelay: 0
+    });
+};
 
 // Search Page:
 function format_search_as_cards(search_results) {
@@ -135,7 +137,7 @@ function format_search_as_cards(search_results) {
                     <div class="header">${cur.title}</div>
                     ${cur.description}
                 </div>
-                </a>`
+                </a>`;
         }, '');
 };
 
@@ -143,13 +145,20 @@ function set_results_to_cards(search_results) {
     $('#search-results').html(format_search_as_cards(search_results));
 };
 
-$('#search-input').click(e => {
-    search_promise($(e.currentTarget).val()).then(results => {
-        set_results_to_cards(results);
+function initialize_search_page() {
+    $('#search-input').click(e => {
+        search_promise($(e.currentTarget).val()).then(results => {
+            set_results_to_cards(results);
+        });
     });
-});
-$('#search-input').keyup(e => {
-    search_promise($(e.currentTarget).val()).then(results => {
-        set_results_to_cards(results);
+    $('#search-input').keyup(e => {
+        search_promise($(e.currentTarget).val()).then(results => {
+            set_results_to_cards(results);
+        });
     });
-});
+};
+
+export function initialize_search() {
+    initialize_search_menu();
+    initialize_search_page();
+}
