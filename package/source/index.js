@@ -1,7 +1,7 @@
 import {initialize_header_popups, to_paragraph, to_toc} from './header-links.js';
 import {initialize_search} from './search.js';
 
-$('.hamburger.item').click(e => {
+$('.hamburger.item').click(() => {
     $('.ui.modal').modal('show');
 });
 

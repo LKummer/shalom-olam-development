@@ -1,7 +1,7 @@
 // Search Helpers:
 function string_insert(string, substring, position) {
     return `${string.slice(0, position)}${substring}${string.slice(position)}`;
-};
+}
 
 const highlight_start = '<mark>';
 const highlight_end = '</mark>';
@@ -14,7 +14,7 @@ function highlight_string(string, matches) {
         extra_length += highlight_end.length;
     });
     return string;
-};
+}
 
 function highlight_match(search_results) {
     console.log(search_results);
@@ -23,10 +23,10 @@ function highlight_match(search_results) {
             search_results.item[match.key] = highlight_string(search_results.item[match.key], match.indices);
         } else {
             search_results.item[match.key][match.arrayIndex] = highlight_string(search_results.item[match.key][match.arrayIndex], match.indices);
-        };
+        }
     });
     return search_results;
-};
+}
 
 function reduce_key(array, prefix, suffix, delimeter = ', ') {
     if (array && array.length >= 1) {
@@ -55,7 +55,7 @@ function parse_results(search_results) {
         return acc;
     }, []);
     return results;
-};
+}
 
 // Search Implementation.
 const fuse_options = {
@@ -76,13 +76,13 @@ const fuse_options = {
 
 function search_json_promise(url) {
     return new Promise((resolve, reject) => {
-        $.getJSON(url, (result, status) => {
+        $.getJSON(url, (result) => {
             resolve(result);
         }).fail(() => {
             reject();
         });
     });
-};
+}
 
 var fuse;
 async function get_fuse() {
@@ -93,20 +93,20 @@ async function get_fuse() {
         } catch(status) {
             return({success: false});
         }
-    };
+    }
     return ({fuse: fuse, success: true});
-};
+}
 
 function search_promise(term) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve) => {
         const fuse = await get_fuse();
         if (fuse.success === true) {
             resolve(parse_results(fuse.fuse.search(term)));
         } else {
             resolve([{title: "Server Error", description: "היתה בעיה עם הגישה לשרת."}]);
-        };
+        }
     });
-};
+}
 
 // Menu Search
 function initialize_search_menu() {
@@ -125,7 +125,7 @@ function initialize_search_menu() {
         selectFirstResult: true,
         searchDelay: 0
     });
-};
+}
 
 // Search Page:
 function format_search_as_cards(search_results) {
@@ -139,11 +139,11 @@ function format_search_as_cards(search_results) {
                 </div>
                 </a>`;
         }, '');
-};
+}
 
 function set_results_to_cards(search_results) {
     $('#search-results').html(format_search_as_cards(search_results));
-};
+}
 
 function initialize_search_page() {
     $('#search-input').click(e => {
@@ -156,7 +156,7 @@ function initialize_search_page() {
             set_results_to_cards(results);
         });
     });
-};
+}
 
 export function initialize_search() {
     initialize_search_menu();

@@ -12,16 +12,16 @@ export function initialize_header_popups() {
         forcePosition: true,
         inline: true
     });
-};
+}
 
 function get_header(element) {
     return $(element).parent('.popup').prev().attr('id');
-};
+}
 
 export function to_paragraph(e) {
     const header = get_header(e);
         window.location = `#${header}`;
-};
+}
 
 export function to_toc() {
     if ($('#toc.accordion .title').hasClass('active')) {
@@ -31,5 +31,5 @@ export function to_toc() {
         setTimeout(() => {
             window.location = '#toc';
         }, 500);
-    };
-};
+    }
+}

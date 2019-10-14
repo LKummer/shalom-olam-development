@@ -1,9 +1,18 @@
 {
+    "extends": "eslint:recommended",
     "parserOptions": {
         "ecmaVersion": 8,
         "sourceType": "module"
     },
+    "env": {
+        "browser": true,
+        "es6": true
+    },
     "rules": {
         "semi": "error"
+    },
+    "globals": {
+        "$": "readonly",
+        "Fuse": "readonly"
     }
 }
