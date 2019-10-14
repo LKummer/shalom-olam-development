@@ -31,3 +31,11 @@ services:
       - ./package:/package
       - ./external/fomantic/distribution:/package/external
       - ./blog/themes/shalom-olam-hugo-theme/static/js/main.js:/package/distribution/main.js
+  
+  package_lint:
+    build: package
+    command: npm run-script lint
+    volumes:
+      - /package/node_modules
+      - /package/external
+      - ./package:/package
