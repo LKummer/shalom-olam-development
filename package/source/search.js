@@ -36,8 +36,7 @@ function reduce_key(array, prefix, suffix, delimeter = ', ') {
         result = result.slice(0, -delimeter.length);
         result += suffix;
         return result;
-    }
-    else {
+    } else {
         return '';
     }
 }
@@ -108,7 +107,7 @@ function search_promise(term) {
 
 // Menu Search
 function initialize_search_menu() {
-    $('.ui.search').search({ 
+    $('.ui.search').search({
         apiSettings: {
             responseAsync: (settings, callback) => {
                 search_promise(settings.urlData.query).then((results) => {
@@ -128,15 +127,15 @@ function initialize_search_menu() {
 // Search Page:
 function format_search_as_cards(search_results) {
     return search_results.reduce((acc, cur) => {
-            return acc +
-                `
-                <a href=${cur.url} class="card">
-                <div class="content">
-                    <div class="header">${cur.title}</div>
-                    ${cur.description}
-                </div>
-                </a>`;
-        }, '');
+        return acc +
+            `
+            <a href=${cur.url} class="card">
+            <div class="content">
+                <div class="header">${cur.title}</div>
+                ${cur.description}
+            </div>
+            </a>`;
+    }, '');
 }
 
 function set_results_to_cards(search_results) {

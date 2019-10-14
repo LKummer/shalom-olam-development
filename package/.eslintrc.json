@@ -9,7 +9,32 @@
         "es6": true
     },
     "rules": {
-        "semi": "error"
+        "semi": "error",
+        "curly": "error",
+        "dot-location": ["error", "property"],
+        "eqeqeq": "error",
+        "array-bracket-spacing": ["error", "never"],
+        "block-spacing": ["error", "never"],
+        "brace-style": ["error", "1tbs"],
+        "comma-dangle": ["error"],
+        "comma-spacing": ["error"],
+        "comma-style": ["error"],
+        "computed-property-spacing": ["error"],
+        "func-call-spacing": ["error"],
+        "func-style": ["error", "declaration"],
+        "implicit-arrow-linebreak": ["error"],
+        "indent": ["error", 4],
+        "key-spacing": ["error"],
+        "keyword-spacing": ["error"],
+        "new-parens": ["error"],
+        "no-trailing-spaces": ["error"],
+        "no-whitespace-before-property": ["error"],
+        "nonblock-statement-body-position": ["error"],
+        "object-curly-spacing": ["error"],
+        "operator-assignment": ["error"],
+        "space-before-function-paren": ["error", "never"],
+        "space-in-parens": ["error"],
+        "spaced-comment": ["error", "always"]
     },
     "globals": {
         "$": "readonly",

@@ -20,7 +20,7 @@ function get_header(element) {
 
 export function to_paragraph(e) {
     const header = get_header(e);
-        window.location = `#${header}`;
+    window.location = `#${header}`;
 }
 
 export function to_toc() {
