@@ -17,11 +17,11 @@ function highlight_string(string, matches) {
 };
 
 function highlight_match(search_results) {
+    console.log(search_results);
     search_results.matches.forEach(match => {
         if (match.key === 'title') {
             search_results.item[match.key] = highlight_string(search_results.item[match.key], match.indices);
-        }
-        else {
+        } else {
             search_results.item[match.key][match.arrayIndex] = highlight_string(search_results.item[match.key][match.arrayIndex], match.indices);
         };
     });
@@ -54,7 +54,6 @@ function parse_results(search_results) {
         acc.push(obj);
         return acc;
     }, []);
-    console.log(results);
     return results;
 };
 
@@ -78,12 +77,9 @@ const fuse_options = {
 function search_json_promise(url) {
     return new Promise((resolve, reject) => {
         $.getJSON(url, (result, status) => {
-            if (status === 'success') {
-                resolve(result);
-            }
-            else {
-                reject(status);
-            };
+            resolve(result);
+        }).fail(() => {
+            reject();
         });
     });
 };
@@ -91,18 +87,24 @@ function search_json_promise(url) {
 var fuse;
 async function get_fuse() {
     if (fuse === undefined) {
-        console.log('constructing Fuse');
-        const search_data = await search_json_promise('/חיפוש/index.json');
-        fuse = new Fuse(search_data, fuse_options);
+        try {
+            const result = await search_json_promise('/חיפוש/index.json')
+            fuse = new Fuse(result, fuse_options);
+        } catch(status) {
+            return({success: false});
+        }
     };
-    return fuse;
+    return ({fuse: fuse, success: true});
 };
 
 function search_promise(term) {
     return new Promise(async (resolve, reject) => {
         const fuse = await get_fuse();
-        const results = parse_results(fuse.search(term));
-        resolve(results);
+        if (fuse.success === true) {
+            resolve(parse_results(fuse.fuse.search(term)));
+        } else {
+            resolve([{title: "Server Error", description: "היתה בעיה עם הגישה לשרת."}]);
+        };
     });
 };
 
