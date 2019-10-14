@@ -83,18 +83,19 @@ function search_json_promise(url) {
 }
 
 function fuse_cache(cache) {
-    if (cache === undefined) {
+    if (cache.status === false) {
         return search_json_promise('/חיפוש/index.json')
             .then(result => {
-                cache = new Fuse(result, fuse_options);
-                return cache;
+                cache.fuse = new Fuse(result, fuse_options);
+                cache.status = true;
+                return cache.fuse;
             });
     } else {
-        return Promise.resolve(cache);
+        return Promise.resolve(cache.fuse);
     }
 }
 
-var fuse_c;
+var fuse_c = {status: false};
 function search_promise(term) {
     return fuse_cache(fuse_c)
         .then(fuse => {
