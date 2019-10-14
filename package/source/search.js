@@ -1,37 +1,7 @@
-const fuse_options = {
-    shouldSort: true,
-    includeMatches: true,
-    findAllMatches: true,
-    threshold: .5,
-    location: 0,
-    distance: 100,
-    maxPatternLength: 32,
-    minMatchCharLength: 1,
-    keys: [
-        'title',
-        'series',
-        'categories'
-    ]
-};
-
-var fuse = false;
-var fuse_promise = new Promise((resolve, reject) => {
-    $.getJSON('/חיפוש/index.json', (result, status) => {
-        if (status === 'success') {
-            resolve(result);
-        }
-        else {
-            reject();
-        };
-    });
-})
-.then(response => {
-    fuse = new Fuse(response, fuse_options);
-});
-
+// Search Helpers:
 function string_insert(string, substring, position) {
     return `${string.slice(0, position)}${substring}${string.slice(position)}`;
-}
+};
 
 const highlight_start = '<mark>'
 const highlight_end = '</mark>'
@@ -42,22 +12,21 @@ function highlight_string(string, matches) {
         extra_length += highlight_start.length;
         string = string_insert(string, highlight_end, indices[1] + extra_length + 1);
         extra_length += highlight_end.length;
-    })
+    });
     return string;
-}
+};
 
-function highlight_match(result) {
-    console.log(result.matches);
-    result.matches.forEach(match => {
-        if (match.key == 'title') {
-            result.item[match.key] = highlight_string(result.item[match.key], match.indices);
+function highlight_match(search_results) {
+    search_results.matches.forEach(match => {
+        if (match.key === 'title') {
+            search_results.item[match.key] = highlight_string(search_results.item[match.key], match.indices);
         }
         else {
-            result.item[match.key][match.arrayIndex] = highlight_string(result.item[match.key][match.arrayIndex], match.indices);
-        }
+            search_results.item[match.key][match.arrayIndex] = highlight_string(search_results.item[match.key][match.arrayIndex], match.indices);
+        };
     });
-    return result;
-}
+    return search_results;
+};
 
 function reduce_key(array, prefix, suffix, delimeter = ', ') {
     if (array && array.length >= 1) {
@@ -74,31 +43,78 @@ function reduce_key(array, prefix, suffix, delimeter = ', ') {
     }
 }
 
-function search(term) {
-    return $.extend(true, [], fuse.search(term))
-        .map(result => highlight_match(result))
-        .reduce((acc, cur) => {
-            const obj = {title: cur.item.title, url: cur.item.url};
-            obj.description = `${reduce_key(cur.item.series, 'סדרה', '. ')}
-                ${reduce_key(cur.item.categories, 'קטגוריות', '.')}<br>
-                ${cur.item.date}`;
-            acc.push(obj);
-            return acc;
-        }, []);
-}
+function parse_results(search_results) {
+    let results = $.extend(true, [], search_results);
+    results = results.map(result => highlight_match(result));
+    results = results.reduce((acc, cur) => {
+        const obj = {title: cur.item.title, url: cur.item.url};
+        obj.description = `${reduce_key(cur.item.series, 'סדרה', '. ')}
+            ${reduce_key(cur.item.categories, 'קטגוריות', '.')}<br>
+            ${cur.item.date}`;
+        acc.push(obj);
+        return acc;
+    }, []);
+    console.log(results);
+    return results;
+};
+
+// Search Implementation.
+const fuse_options = {
+    shouldSort: true,
+    includeMatches: true,
+    findAllMatches: true,
+    threshold: .5,
+    location: 0,
+    distance: 100,
+    maxPatternLength: 32,
+    minMatchCharLength: 1,
+    keys: [
+        'title',
+        'series',
+        'categories'
+    ]
+};
+
+function search_json_promise(url) {
+    return new Promise((resolve, reject) => {
+        $.getJSON(url, (result, status) => {
+            if (status === 'success') {
+                resolve(result);
+            }
+            else {
+                reject(status);
+            };
+        });
+    });
+};
+
+var fuse;
+async function get_fuse() {
+    if (fuse === undefined) {
+        console.log('constructing Fuse');
+        const search_data = await search_json_promise('/חיפוש/index.json');
+        fuse = new Fuse(search_data, fuse_options);
+    };
+    return fuse;
+};
+
+function search_promise(term) {
+    return new Promise(async (resolve, reject) => {
+        const fuse = await get_fuse();
+        const results = parse_results(fuse.search(term));
+        resolve(results);
+    });
+};
 
 // Menu Search
 $('.ui.search').search({ 
     apiSettings: {
         responseAsync: (settings, callback) => {
-            if (fuse)
-            {
-                const results = search(settings.urlData.query);
+            search_promise(settings.urlData.query).then((results) => {
                 callback({results: results, success: true});
-            }
-            else {
+            }, () => {
                 callback({success: false});
-            }
+            });
         }},
     error: {
         noResults: 'אולי תנסו משהו אחר?'
@@ -108,8 +124,8 @@ $('.ui.search').search({
 });
 
 // Search Page:
-function format_search_as_cards(search) {
-    return search.reduce((acc, cur) => {
+function format_search_as_cards(search_results) {
+    return search_results.reduce((acc, cur) => {
             return acc +
                 `
                 <a href=${cur.url} class="card">
@@ -119,13 +135,19 @@ function format_search_as_cards(search) {
                 </div>
                 </a>`
         }, '');
-}
+};
+
+function set_results_to_cards(search_results) {
+    $('#search-results').html(format_search_as_cards(search_results));
+};
 
 $('#search-input').click(e => {
-    const results = format_search_as_cards(search($(e.currentTarget).val()));
-    $('#search-results').html(results);
+    search_promise($(e.currentTarget).val()).then(results => {
+        set_results_to_cards(results);
+    });
 });
 $('#search-input').keyup(e => {
-    const results = format_search_as_cards(search($(e.currentTarget).val()));
-    $('#search-results').html(results);
+    search_promise($(e.currentTarget).val()).then(results => {
+        set_results_to_cards(results);
+    });
 });
