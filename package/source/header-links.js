@@ -13,7 +13,7 @@ headers.popup({
 });
 
 function get_header(element) {
-    return $(element).parent('.popup').prev().attr('id')
+    return $(element).parent('.popup').prev().attr('id');
 };
 
 window.to_paragraph = function(e) {
@@ -22,12 +22,9 @@ window.to_paragraph = function(e) {
 };
 
 window.to_toc = function() {
-    if ($('#toc.accordion .title').hasClass('active'))
-    {
+    if ($('#toc.accordion .title').hasClass('active')) {
         window.location = '#toc';
-    }
-    else
-    {
+    } else {
         $('.ui.accordion#toc').accordion('open', 0);
         setTimeout(() => {
             window.location = '#toc';
