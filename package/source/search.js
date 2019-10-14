@@ -17,7 +17,6 @@ function highlight_string(string, matches) {
 }
 
 function highlight_match(search_results) {
-    console.log(search_results);
     search_results.matches.forEach(match => {
         if (match.key === 'title') {
             search_results.item[match.key] = highlight_string(search_results.item[match.key], match.indices);
@@ -84,28 +83,27 @@ function search_json_promise(url) {
     });
 }
 
-var fuse;
-async function get_fuse() {
-    if (fuse === undefined) {
-        try {
-            const result = await search_json_promise('/חיפוש/index.json');
-            fuse = new Fuse(result, fuse_options);
-        } catch(status) {
-            return({success: false});
-        }
+function fuse_cache(cache) {
+    if (cache === undefined) {
+        return search_json_promise('/חיפוש/index.json')
+            .then(result => {
+                cache = new Fuse(result, fuse_options);
+                return cache;
+            });
+    } else {
+        return Promise.resolve(cache);
     }
-    return ({fuse: fuse, success: true});
 }
 
+var fuse_c;
 function search_promise(term) {
-    return new Promise(async (resolve) => {
-        const fuse = await get_fuse();
-        if (fuse.success === true) {
-            resolve(parse_results(fuse.fuse.search(term)));
-        } else {
-            resolve([{title: "Server Error", description: "היתה בעיה עם הגישה לשרת."}]);
-        }
-    });
+    return fuse_cache(fuse_c)
+        .then(fuse => {
+            return parse_results(fuse.search(term));
+        })
+        .catch(() => {
+            return [{title: "Server Error", description: "היתה בעיה עם הגישה לשרת."}];
+        });
 }
 
 // Menu Search
