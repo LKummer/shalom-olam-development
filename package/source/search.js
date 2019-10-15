@@ -27,15 +27,17 @@ function highlight_match(search_results) {
     return search_results;
 }
 
-function reduce_key(array, prefix, suffix, delimeter = ', ') {
-    if (array && array.length >= 1) {
-        let result = `${prefix}: `;
+function reduce_key(array, plural_prefix, singular_prefix, suffix, delimeter = ', ') {
+    if (array && array.length >= 2) {
+        let result = `${plural_prefix}: `;
         array.forEach(e => {
             result += e + delimeter;
         });
         result = result.slice(0, -delimeter.length);
         result += suffix;
         return result;
+    } else if (array && array.length === 1) {
+        return `${singular_prefix}: ${array[0]}${suffix}`;
     } else {
         return '';
     }
@@ -46,9 +48,9 @@ function parse_results(search_results) {
     results = results.map(result => highlight_match(result));
     results = results.reduce((acc, cur) => {
         const obj = {title: cur.item.title, url: cur.item.url};
-        obj.description = `${reduce_key(cur.item.series, 'סדרה', '. ')}
-            ${reduce_key(cur.item.categories, 'קטגוריות', '.')}<br>
-            ${cur.item.date}`;
+        obj.description = `${reduce_key(cur.item.series, 'סדרות', 'סדרה', '. ')}`
+            + `${reduce_key(cur.item.categories, 'קטגוריות', 'קטגוריה', '.')}<br>`
+            + `${cur.item.date ? cur.item.date : ''}`;
         acc.push(obj);
         return acc;
     }, []);
@@ -127,15 +129,10 @@ function initialize_search_menu() {
 
 // Search Page:
 function format_search_as_cards(search_results) {
+    console.log(search_results);
     return search_results.reduce((acc, cur) => {
         return acc +
-            `
-            <a href=${cur.url} class="card">
-            <div class="content">
-                <div class="header">${cur.title}</div>
-                ${cur.description}
-            </div>
-            </a>`;
+            `<a href=${cur.url} class="card"><div class="content"><div class="header">${cur.title}</div>${cur.description}</div></a>`;
     }, '');
 }
 
