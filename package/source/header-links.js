@@ -1,4 +1,4 @@
-const headers = $('#post-content :header');
+const headers = $('#post-content>:header');
 const paragraph_link_html = '<i id="paragraph-link-icon" class="paragraph link icon" onclick="to_paragraph(this)"></i>';
 const toc_link_html = '<i id="toc-link-icon" class="list ul link icon" onclick="to_toc(this)"></i>';
 export function initialize_header_popups() {
